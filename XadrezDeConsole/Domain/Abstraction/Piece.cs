@@ -1,6 +1,6 @@
 ﻿using XadrezDeConsole.Helpers.Enums;
 
-namespace XadrezDeConsole.GameModels
+namespace XadrezDeConsole.Domain.Abstraction
 {
     public class Piece
     {
@@ -9,11 +9,11 @@ namespace XadrezDeConsole.GameModels
         public ColorEnum Color { get; protected set; }
         public int Movements { get; protected set; }
     
-        public Piece(Board board, Position position, ColorEnum color)
+        public Piece(Board board, ColorEnum color)
         {
             this.Board = board;
-            this.Position = position;
             this.Color = color;
+            this.Position = null;
             this.Movements = 0;
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace XadrezDeConsole.GameModels
+namespace XadrezDeConsole.Domain.Abstraction
 {
     public class Position
     {
