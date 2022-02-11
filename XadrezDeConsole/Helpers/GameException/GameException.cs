@@ -8,7 +8,6 @@ namespace XadrezDeConsole.Helpers.GameException
     {
         public GameException(string message) : base(message)
         {
-
         }
     }
 }

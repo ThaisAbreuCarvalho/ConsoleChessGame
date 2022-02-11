@@ -4,16 +4,14 @@ namespace XadrezDeConsole.Domain.Abstraction
 {
     public class Board
     {
-        public int Lines { get; set; }
-        public int Columns { get; set; }
+        public int Lines { get; } = 8;
+        public int Columns { get; } = 8;
 
         private Piece[,] Pieces;
 
-        public Board(int lines, int columns)
+        public Board()
         {
-            this.Lines = lines;
-            this.Columns = columns;
-            this.Pieces = new Piece[lines, columns];
+            this.Pieces = new Piece[Lines, Columns];
         }
 
         public Piece Piece(int line, int column)
@@ -28,6 +26,9 @@ namespace XadrezDeConsole.Domain.Abstraction
 
         public void InsertPiece(Piece piece, Position position)
         {
+            if (IsEmpty(position))
+                throw new GameException($"Position occupied {position}");
+
             this.Pieces[position.Line, position.Column] = piece;
             piece.Position = position;
         }
@@ -44,6 +45,12 @@ namespace XadrezDeConsole.Domain.Abstraction
         {
             if (!ValidPosition(position))
                 throw new GameException($"Invalid Position: {position}");
+        }
+
+        public bool IsEmpty(Position position)
+        {
+            ValidPosition(position);
+            return Piece(position) != null;
         }
     }
 }
