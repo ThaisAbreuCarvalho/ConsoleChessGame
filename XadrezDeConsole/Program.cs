@@ -13,18 +13,12 @@ namespace XadrezDeConsole
         {
             try
             {
-
-                Board board = new Board();
-
-                board.InsertPiece(new Tour(board, ColorEnum.Yellow), new Position(0, 0));
-                board.InsertPiece(new Tour(board, ColorEnum.Yellow), new Position(1, 3));
-                board.InsertPiece(new King(board, ColorEnum.Red), new Position(2, 4));
-
-                Screen.PrintBoard(board);
+                Match match = new Match();
+                Screen.PrintBoard(match.Board);
             }
             catch (GameException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message + ex.InnerException + ex.StackTrace);
             }
         }
     }

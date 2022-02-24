@@ -8,7 +8,7 @@ namespace XadrezDeConsole.Domain.Entities
 {
     public class Tour : Piece
     {
-        public Tour(Board board, ColorEnum color) : base(board, color)
+        public Tour(Board board, Color color) : base(board, color)
         {
         }
 

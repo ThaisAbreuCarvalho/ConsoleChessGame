@@ -6,15 +6,15 @@ using XadrezDeConsole.Helpers.Enums;
 
 namespace XadrezDeConsole.Domain.Entities
 {
-    public class King : Piece
+    public class Pawn : Piece
     {
-        public King(Board board, Color color) : base(board, color)
+        public Pawn(Board board, Color color) : base(board, color)
         {
         }
 
         public override string ToString()
         {
-            return "R ";
+            return "P ";
         }
     }
 }

@@ -32,6 +32,19 @@ namespace XadrezDeConsole.Domain.Abstraction
             this.Pieces[position.Line, position.Column] = piece;
             piece.Position = position;
         }
+        
+        public Piece RemovePiece(Position position)
+        {
+            var piece = Piece(position);
+            if (piece == null)
+            {
+                return null;
+            }
+
+            piece.Position = null;
+            Pieces[position.Line, position.Column] = null;
+            return piece;
+        }
 
         public bool ValidPosition(Position position)
         {
