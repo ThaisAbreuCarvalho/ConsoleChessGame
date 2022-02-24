@@ -1,5 +1,9 @@
 ﻿using System;
-using XadrezDeConsole.GameModels;
+using XadrezDeConsole.Domain.Abstraction;
+using XadrezDeConsole.Domain.Entities;
+using XadrezDeConsole.Helpers;
+using XadrezDeConsole.Helpers.Enums;
+using XadrezDeConsole.Helpers.GameException;
 
 namespace XadrezDeConsole
 {
@@ -7,9 +11,15 @@ namespace XadrezDeConsole
     {
         static void Main(string[] args)
         {
-            Board board = new Board(8, 8);
-
-            Screen.PrintBoard(board);
+            try
+            {
+                Match match = new Match();
+                Screen.PrintBoard(match.Board);
+            }
+            catch (GameException ex)
+            {
+                Console.WriteLine(ex.Message + ex.InnerException + ex.StackTrace);
+            }
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace XadrezDeConsole.Helpers.Enums
 {
-    public enum ColorEnum
+    public enum Color : int
     {
-        Vermelha,
-        Branca
+        Red = ConsoleColor.Red,
+        Yellow = ConsoleColor.Yellow
     }
 }
