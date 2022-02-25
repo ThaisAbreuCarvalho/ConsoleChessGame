@@ -7,10 +7,9 @@ namespace XadrezDeConsole.Domain.Entities
     public class Match
     {
         public Board Board { get; private set; }
-
         private int Turn;
-
         private Color CurrentPlayer;
+        public bool IsFinished { get; private set; }
 
         public Match()
         {
