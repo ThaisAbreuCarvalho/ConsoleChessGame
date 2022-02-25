@@ -2,7 +2,7 @@
 
 namespace XadrezDeConsole.Domain.Abstraction
 {
-    public class Piece
+    public abstract class Piece
     {
         public Board Board { get; protected set; }
         public Position Position { get; set; }
@@ -21,5 +21,7 @@ namespace XadrezDeConsole.Domain.Abstraction
         {
             this.Movements ++;
         }
+
+        public abstract bool[,] PossibleMovements();
     }
 }
