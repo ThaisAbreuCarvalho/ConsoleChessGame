@@ -24,6 +24,6 @@ namespace XadrezDeConsole.Helpers
         public Position ToPosition(Board board)
         {
             return new Position(board.Lines - Line, Column - 'a');
-        } 
+        }
     }
 }
