@@ -36,5 +36,11 @@ namespace XadrezDeConsole.Helpers
             Console.Write(piece);
             Console.ForegroundColor= ConsoleColor.Gray;
         }
+
+        public static ScreenPositon ReadPosition()
+        {
+            var movement = Console.ReadLine();
+            return new ScreenPositon(movement[0], Convert.ToInt32(movement[1].ToString()));
+        }
     }
 }
