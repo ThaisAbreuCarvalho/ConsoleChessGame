@@ -32,15 +32,7 @@ namespace XadrezDeConsole.Domain.Entities
             {
                 for (int j = 0; j < this.Board.Columns; j++)
                 {
-                    var position = new Position(i, j);
-                    if (this.Board.ValidPosition(position) && IsMovementValid(position))
-                    {
-                        response[i, j] = true;
-                    }
-                    else
-                    {
-                        response[i, j] = false;
-                    }
+                    response[i, j] = IsMovementValid(new Position(i, j));
                 }
             }
 
