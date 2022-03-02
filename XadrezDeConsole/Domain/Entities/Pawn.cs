@@ -14,7 +14,25 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override bool[,] PossibleMovements()
         {
-            throw new NotImplementedException();
+            var response = new bool[this.Board.Lines, this.Board.Columns];
+            var position = new Position(this.Position.Line - 1, this.Position.Column);
+            
+            if (this.IsMovementValid(position) && this.Board.Piece(position) == null)
+            {
+                response[position.Line, position.Column] = true;
+            }
+
+            if (this.Movements == 0)
+            {
+                position = new Position(this.Position.Line - 2, this.Position.Column);
+                if (this.IsMovementValid(position) && this.Board.Piece(position) == null)
+                {
+                    response[position.Line, position.Column] = true;
+                }
+            }
+
+            //side check
+            return response;
         }
 
         public override string ToString()

@@ -26,6 +26,11 @@ namespace XadrezDeConsole.Domain.Abstraction
         {
             var hasPiece = this.Board.Piece(position);
 
+            if (!this.Board.IsValidPosition(position))
+            {
+                return false;
+            }
+
             if (hasPiece == null || hasPiece.Color != this.Color)
             {
                 return true;

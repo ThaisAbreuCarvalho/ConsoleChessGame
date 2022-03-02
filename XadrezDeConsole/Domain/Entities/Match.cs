@@ -39,14 +39,14 @@ namespace XadrezDeConsole.Domain.Entities
         private void SetBoard()
         {
             //yellow
-            this.Board.InsertPiece(new Horse(this.Board, Color.Yellow), new ScreenPositon('a', 1).ToPosition(this.Board));
-            this.Board.InsertPiece(new Tour(this.Board, Color.Yellow), new ScreenPositon('b', 1).ToPosition(this.Board));
+            this.Board.InsertPiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('a', 1).ToPosition(this.Board));
+            this.Board.InsertPiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('b', 1).ToPosition(this.Board));
             this.Board.InsertPiece(new Bishop(this.Board, Color.Yellow), new ScreenPositon('c', 1).ToPosition(this.Board));
             this.Board.InsertPiece(new King(this.Board, Color.Yellow), new ScreenPositon('d', 1).ToPosition(this.Board));
             this.Board.InsertPiece(new Queen(this.Board, Color.Yellow), new ScreenPositon('e', 1).ToPosition(this.Board));
             this.Board.InsertPiece(new Bishop(this.Board, Color.Yellow), new ScreenPositon('f', 1).ToPosition(this.Board));
-            this.Board.InsertPiece(new Tour(this.Board, Color.Yellow), new ScreenPositon('g', 1).ToPosition(this.Board));
-            this.Board.InsertPiece(new Horse(this.Board, Color.Yellow), new ScreenPositon('h', 1).ToPosition(this.Board));
+            this.Board.InsertPiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('g', 1).ToPosition(this.Board));
+            this.Board.InsertPiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('h', 1).ToPosition(this.Board));
 
             this.Board.InsertPiece(new Pawn(this.Board, Color.Yellow), new ScreenPositon('a', 2).ToPosition(this.Board));
             this.Board.InsertPiece(new Pawn(this.Board, Color.Yellow), new ScreenPositon('b', 2).ToPosition(this.Board));
@@ -58,14 +58,14 @@ namespace XadrezDeConsole.Domain.Entities
             this.Board.InsertPiece(new Pawn(this.Board, Color.Yellow), new ScreenPositon('h', 2).ToPosition(this.Board));
 
             //red
-            this.Board.InsertPiece(new Horse(this.Board, Color.Red), new ScreenPositon('a', 8).ToPosition(this.Board));
-            this.Board.InsertPiece(new Tour(this.Board, Color.Red), new ScreenPositon('b', 8).ToPosition(this.Board));
+            this.Board.InsertPiece(new Knight(this.Board, Color.Red), new ScreenPositon('a', 8).ToPosition(this.Board));
+            this.Board.InsertPiece(new Rook(this.Board, Color.Red), new ScreenPositon('b', 8).ToPosition(this.Board));
             this.Board.InsertPiece(new Bishop(this.Board, Color.Red), new ScreenPositon('c', 8).ToPosition(this.Board));
             this.Board.InsertPiece(new King(this.Board, Color.Red), new ScreenPositon('d', 8).ToPosition(this.Board));
             this.Board.InsertPiece(new Queen(this.Board, Color.Red), new ScreenPositon('e', 8).ToPosition(this.Board));
             this.Board.InsertPiece(new Bishop(this.Board, Color.Red), new ScreenPositon('f', 8).ToPosition(this.Board));
-            this.Board.InsertPiece(new Tour(this.Board, Color.Red), new ScreenPositon('g', 8).ToPosition(this.Board));
-            this.Board.InsertPiece(new Horse(this.Board, Color.Red), new ScreenPositon('h', 8).ToPosition(this.Board));
+            this.Board.InsertPiece(new Rook(this.Board, Color.Red), new ScreenPositon('g', 8).ToPosition(this.Board));
+            this.Board.InsertPiece(new Knight(this.Board, Color.Red), new ScreenPositon('h', 8).ToPosition(this.Board));
 
 
             this.Board.InsertPiece(new Pawn(this.Board, Color.Red), new ScreenPositon('a', 7).ToPosition(this.Board));
