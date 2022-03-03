@@ -24,12 +24,12 @@ namespace XadrezDeConsole.Domain.Abstraction
 
         public bool IsMovementValid(Position position)
         {
-            var hasPiece = this.Board.Piece(position);
-
             if (!this.Board.IsValidPosition(position))
             {
                 return false;
             }
+
+            var hasPiece = this.Board.Piece(position);
 
             if (hasPiece == null || hasPiece.Color != this.Color)
             {

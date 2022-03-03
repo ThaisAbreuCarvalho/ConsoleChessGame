@@ -19,7 +19,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return "Q ";
+            return " Q ";
         }
     }
 }

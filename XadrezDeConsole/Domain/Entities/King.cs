@@ -29,7 +29,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return "K ";
+            return " K ";
         }
     }
 }

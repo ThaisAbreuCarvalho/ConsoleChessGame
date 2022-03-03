@@ -17,7 +17,7 @@ namespace XadrezDeConsole.Domain.Entities
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
             //upper
-            for (int i = this.Position.Line; i > 0; i--)
+            for (int i = this.Position.Column; i >= 0; i--)
             {
                 var isEnemy = this.Board.Piece(new Position(i, this.Position.Column));
 
@@ -32,13 +32,13 @@ namespace XadrezDeConsole.Domain.Entities
             }
 
             //left side
-            for (int i = this.Position.Line; i > 0; i--)
+            for (int i = this.Position.Line; i >= 0; i--)
             {
                 var isEnemy = this.Board.Piece(new Position(this.Position.Line, i));
 
                 if (isEnemy == null || isEnemy.Color != this.Color)
                 {
-                    response[i, this.Position.Column] = true;
+                    response[this.Position.Line, i ] = true;
                 }
             }
 
@@ -47,7 +47,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return "R ";
+            return " R ";
         }
     }
 }
