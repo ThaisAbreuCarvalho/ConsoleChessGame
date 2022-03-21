@@ -46,19 +46,19 @@ namespace XadrezDeConsole.Domain.Entities
             {
                 response[position.Line, position.Column] = true;
             }
-            position.Column = this.Position.Line + 1;
+            position.Line = this.Position.Line + 1;
             if (IsMovementValid(position))
             {
                 response[position.Line, position.Column] = true;
             }
 
             //right side
-            position = new Position(this.Position.Line - 1, this.Position.Column - 2);
+            position = new Position(this.Position.Line - 1, this.Position.Column + 2);
             if (IsMovementValid(position))
             {
                 response[position.Line, position.Column] = true;
             }
-            position.Column = this.Position.Line + 1;
+            position.Line = this.Position.Line + 1;
             if (IsMovementValid(position))
             {
                 response[position.Line, position.Column] = true;
