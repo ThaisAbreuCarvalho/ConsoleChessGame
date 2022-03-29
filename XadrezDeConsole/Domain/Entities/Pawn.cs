@@ -18,32 +18,36 @@ namespace XadrezDeConsole.Domain.Entities
         public override bool[,] PossibleMovements()
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
-            var position = new Position(0, 0);
+            var direction = this.Color == Color.Red ? -1 : 1;
 
-            //moves just foward
-            if (this.InitialPosition.Line == 7)
+            //não pode andar para frente se houver peça na frente
+            var position = new Position(this.Position.Line + (direction * -1), this.Position.Column);
+            if (IsMovementValid(position) && this.Board.Piece(position) == null)
             {
-                position = new Position(this.Position.Line - 1, this.Position.Column);
+                response[position.Line, position.Column] = true;
+            }
 
-                if (this.IsMovementValid(position) && this.Board.Piece(position) == null)
+            //pode dar dois passos se for a primeira rodada
+            position = new Position(this.Position.Line + (direction * -2), this.Position.Column);
+            if (this.Movements == 0)
+            {
+                if (IsMovementValid(position) && this.Board.Piece(position) == null)
                 {
                     response[position.Line, position.Column] = true;
                 }
-
-                if (this.Movements == 0)
-                {
-                    position = new Position(this.Position.Line - 2, this.Position.Column);
-                    if (this.IsMovementValid(position) && this.Board.Piece(position) == null)
-                    {
-                        response[position.Line, position.Column] = true;
-                    }
-                }
-
-                //side check
             }
-            else
-            {
 
+            //só pode andar para o lado se não houver peça ou se a peça for inimiga
+            position = new Position(this.Position.Line + (direction * -1), this.Position.Column - 1);
+            if (IsMovementValid(position) && (this.Board.Piece(position) == null || this.Board.Piece(position).Color != this.Color))
+            {
+                response[position.Line, position.Column] = true;
+            }
+
+            position = new Position(this.Position.Line + (direction * -1), this.Position.Column + 1);
+            if (IsMovementValid(position) && (this.Board.Piece(position) == null || this.Board.Piece(position) .Color != this.Color))
+            {
+                response[position.Line, position.Column] = true;
             }
 
             return response;
