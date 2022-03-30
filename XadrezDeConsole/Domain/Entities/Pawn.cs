@@ -20,14 +20,12 @@ namespace XadrezDeConsole.Domain.Entities
             var response = new bool[this.Board.Lines, this.Board.Columns];
             var direction = this.Color == Color.Red ? -1 : 1;
 
-            //não pode andar para frente se houver peça na frente
             var position = new Position(this.Position.Line + (direction * -1), this.Position.Column);
             if (IsMovementValid(position) && this.Board.Piece(position) == null)
             {
                 response[position.Line, position.Column] = true;
             }
 
-            //pode dar dois passos se for a primeira rodada
             position = new Position(this.Position.Line + (direction * -2), this.Position.Column);
             if (this.Movements == 0)
             {
@@ -37,7 +35,6 @@ namespace XadrezDeConsole.Domain.Entities
                 }
             }
 
-            //só pode andar para o lado se não houver peça ou se a peça for inimiga
             position = new Position(this.Position.Line + (direction * -1), this.Position.Column - 1);
             if (IsMovementValid(position) && (this.Board.Piece(position) == null || this.Board.Piece(position).Color != this.Color))
             {

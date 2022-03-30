@@ -16,29 +16,77 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            //upper
-            for (int i = this.Position.Column; i >= 0; i--)
+            //top and bottom check
+            for (int i = this.Position.Line; i < this.Board.Lines; i++)
             {
-                var isEnemy = this.Board.Piece(new Position(i, this.Position.Column));
+                var position = new Position(i, this.Position.Column);
+                if (IsMovementValid(position))
+                {
+                    var hasPiece = this.Board.Piece(position);
 
-                if (isEnemy != null && isEnemy.Color == this.Color && isEnemy.Position != this.Position)
-                {
-                    break;
-                }
-                else if (isEnemy == null || isEnemy.Position != this.Position)
-                {
-                    response[i, this.Position.Column] = true;
+                    if (hasPiece == null || hasPiece.Color != this.Color)
+                    {
+                        response[position.Line, position.Column] = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
-            //left side
             for (int i = this.Position.Line; i >= 0; i--)
             {
-                var isEnemy = this.Board.Piece(new Position(this.Position.Line, i));
-
-                if (isEnemy == null || isEnemy.Color != this.Color)
+                var position = new Position(i, this.Position.Column);
+                if (IsMovementValid(position))
                 {
-                    response[this.Position.Line, i ] = true;
+                    var hasPiece = this.Board.Piece(position);
+
+                    if (hasPiece == null || hasPiece.Color != this.Color)
+                    {
+                        response[position.Line, position.Column] = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            //sides check
+            for (int i = this.Position.Column; i < this.Board.Columns; i++)
+            {
+                var position = new Position(this.Position.Line, i);
+                if (IsMovementValid(position))
+                {
+                    var hasPiece = this.Board.Piece(position);
+
+                    if (hasPiece == null || hasPiece.Color != this.Color)
+                    {
+                        response[position.Line, position.Column] = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            for (int i = this.Position.Column; i >= 0; i--)
+            {
+                var position = new Position(this.Position.Line, i);
+                if (IsMovementValid(position))
+                {
+                    var hasPiece = this.Board.Piece(position);
+
+                    if (hasPiece == null || hasPiece.Color != this.Color)
+                    {
+                        response[position.Line, position.Column] = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
