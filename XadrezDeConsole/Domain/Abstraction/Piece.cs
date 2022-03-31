@@ -22,6 +22,23 @@ namespace XadrezDeConsole.Domain.Abstraction
             this.Movements ++;
         }
 
+        public bool IsMovementValid(Position position)
+        {
+            if (!this.Board.IsValidPosition(position))
+            {
+                return false;
+            }
+
+            var hasPiece = this.Board.Piece(position);
+
+            if (hasPiece == null || hasPiece.Color != this.Color)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public abstract bool[,] PossibleMovements();
     }
 }

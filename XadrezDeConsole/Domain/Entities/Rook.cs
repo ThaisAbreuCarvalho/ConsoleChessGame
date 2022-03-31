@@ -6,9 +6,9 @@ using XadrezDeConsole.Helpers.Enums;
 
 namespace XadrezDeConsole.Domain.Entities
 {
-    public class Bishop : Piece
+    public class Rook : Piece
     {
-        public Bishop(Board board, Color color) : base(board, color)
+        public Rook(Board board, Color color) : base(board, color)
         {
         }
 
@@ -16,71 +16,55 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            var goOn = true;
-            var position = new Position(this.Position.Line, this.Position.Column);
-            while (goOn)
+            for (int i = this.Position.Line + 1; i < this.Board.Lines; i++)
             {
-                position.Line += 1;
-                position.Column += 1;
-
+                var position = new Position(i, this.Position.Column);
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
                 }
                 else
                 {
-                    goOn = false;
+                    break;
                 }
             }
 
-            goOn = true;
-            position = new Position(this.Position.Line, this.Position.Column);
-            while (goOn)
+            for (int i = this.Position.Line - 1; i >= 0; i--)
             {
-                position.Line -= 1;
-                position.Column -= 1;
-
+                var position = new Position(i, this.Position.Column);
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
                 }
                 else
                 {
-                    goOn = false;
+                    break;
                 }
             }
 
-            goOn = true;
-            position = new Position(this.Position.Line, this.Position.Column);
-            while (goOn)
+            for (int i = this.Position.Column + 1; i < this.Board.Columns; i++)
             {
-                position.Line += 1;
-                position.Column -= 1;
-
+                var position = new Position(this.Position.Line, i);
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
                 }
                 else
                 {
-                    goOn = false;
+                    break;
                 }
             }
-            
-            goOn = true;
-            position = new Position(this.Position.Line, this.Position.Column);
-            while (goOn)
-            {
-                position.Line -= 1;
-                position.Column += 1;
 
+            for (int i = this.Position.Column - 1; i >= 0; i--)
+            {
+                var position = new Position(this.Position.Line, i);
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
                 }
                 else
                 {
-                    goOn = false;
+                    break;
                 }
             }
 
@@ -89,7 +73,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return " B ";
+            return " R ";
         }
     }
 }

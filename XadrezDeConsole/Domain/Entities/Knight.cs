@@ -6,9 +6,9 @@ using XadrezDeConsole.Helpers.Enums;
 
 namespace XadrezDeConsole.Domain.Entities
 {
-    public class King : Piece
+    public class Knight : Piece
     {
-        public King(Board board, Color color) : base(board, color)
+        public Knight(Board board, Color color) : base(board, color)
         {
         }
 
@@ -16,39 +16,56 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            var position = new Position(this.Position.Line + 1, this.Position.Column);
+            var position = new Position(this.Position.Line - 2, this.Position.Column - 1);
             if (IsMovementValid(position))
+            {
                 response[position.Line, position.Column] = true;
-            position = new Position(this.Position.Line + 1, this.Position.Column + 1);
+            }
+            position.Column = this.Position.Column + 1;
             if (IsMovementValid(position))
+            {
                 response[position.Line, position.Column] = true;
-            position = new Position(this.Position.Line + 1, this.Position.Column - 1);
-            if (IsMovementValid(position))
-                response[position.Line, position.Column] = true;
+            }
 
-            position = new Position(this.Position.Line - 1, this.Position.Column);
+            position = new Position(this.Position.Line + 2, this.Position.Column - 1);
             if (IsMovementValid(position))
+            {
                 response[position.Line, position.Column] = true;
-            position = new Position(this.Position.Line - 1, this.Position.Column + 1);
+            }
+            position.Column = this.Position.Column + 1;
             if (IsMovementValid(position))
+            {
                 response[position.Line, position.Column] = true;
-            position = new Position(this.Position.Line - 1, this.Position.Column - 1);
-            if (IsMovementValid(position))
-                response[position.Line, position.Column] = true;
+            }
 
-            position = new Position(this.Position.Line, this.Position.Column + 1);
+            position = new Position(this.Position.Line - 1, this.Position.Column - 2);
             if (IsMovementValid(position))
+            {
                 response[position.Line, position.Column] = true;
-            position = new Position(this.Position.Line, this.Position.Column - 1);
+            }
+            position.Line = this.Position.Line + 1;
             if (IsMovementValid(position))
+            {
                 response[position.Line, position.Column] = true;
+            }
+
+            position = new Position(this.Position.Line - 1, this.Position.Column + 2);
+            if (IsMovementValid(position))
+            {
+                response[position.Line, position.Column] = true;
+            }
+            position.Line = this.Position.Line + 1;
+            if (IsMovementValid(position))
+            {
+                response[position.Line, position.Column] = true;
+            }
 
             return response;
         }
 
         public override string ToString()
         {
-            return " K ";
+            return "Kn ";
         }
     }
 }

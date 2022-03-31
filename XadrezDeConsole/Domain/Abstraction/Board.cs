@@ -46,23 +46,23 @@ namespace XadrezDeConsole.Domain.Abstraction
             return piece;
         }
 
-        public bool ValidPosition(Position position)
+        public bool IsValidPosition(Position position)
         {
             if (position.Line < 0 || position.Column < 0)
                 return false;
 
-            return (position.Line <= this.Pieces.GetLength(0) && position.Column <= this.Pieces.GetLength(1));
+            return (position.Line < this.Pieces.GetLength(0) && position.Column < this.Pieces.GetLength(1));
         }
 
         public void ValidatePosition(Position position)
         {
-            if (!ValidPosition(position))
+            if (!IsValidPosition(position))
                 throw new GameException($"Invalid Position: {position}");
         }
 
         public bool IsEmpty(Position position)
         {
-            ValidPosition(position);
+            IsValidPosition(position);
             return Piece(position) != null;
         }
     }
