@@ -16,7 +16,6 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            //top side
             var position = new Position(this.Position.Line - 2, this.Position.Column - 1);
             if (IsMovementValid(position))
             {
@@ -28,7 +27,6 @@ namespace XadrezDeConsole.Domain.Entities
                 response[position.Line, position.Column] = true;
             }
 
-            //bottom side
             position = new Position(this.Position.Line + 2, this.Position.Column - 1);
             if (IsMovementValid(position))
             {
@@ -40,7 +38,6 @@ namespace XadrezDeConsole.Domain.Entities
                 response[position.Line, position.Column] = true;
             }
 
-            //left side
             position = new Position(this.Position.Line - 1, this.Position.Column - 2);
             if (IsMovementValid(position))
             {
@@ -52,7 +49,6 @@ namespace XadrezDeConsole.Domain.Entities
                 response[position.Line, position.Column] = true;
             }
 
-            //right side
             position = new Position(this.Position.Line - 1, this.Position.Column + 2);
             if (IsMovementValid(position))
             {
