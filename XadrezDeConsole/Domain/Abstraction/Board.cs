@@ -26,6 +26,9 @@ namespace XadrezDeConsole.Domain.Abstraction
 
         public void InsertPiece(Piece piece, Position position)
         {
+            if (IsEmpty(position))
+                throw new GameException($"Position occupied {position}");
+
             this.Pieces[position.Line, position.Column] = piece;
             piece.Position = position;
         }
