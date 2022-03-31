@@ -16,7 +16,7 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            for (int i = this.Position.Line; i < this.Board.Lines; i++)
+            for (int i = this.Position.Line + 1; i < this.Board.Lines; i++)
             {
                 var position = new Position(i, this.Position.Column);
                 if (IsMovementValid(position))
@@ -29,7 +29,7 @@ namespace XadrezDeConsole.Domain.Entities
                 }
             }
 
-            for (int i = this.Position.Line; i >= 0; i--)
+            for (int i = this.Position.Line - 1; i >= 0; i--)
             {
                 var position = new Position(i, this.Position.Column);
                 if (IsMovementValid(position))
@@ -42,7 +42,7 @@ namespace XadrezDeConsole.Domain.Entities
                 }
             }
 
-            for (int i = this.Position.Column; i < this.Board.Columns; i++)
+            for (int i = this.Position.Column + 1; i < this.Board.Columns; i++)
             {
                 var position = new Position(this.Position.Line, i);
                 if (IsMovementValid(position))
@@ -55,7 +55,7 @@ namespace XadrezDeConsole.Domain.Entities
                 }
             }
 
-            for (int i = this.Position.Column; i >= 0; i--)
+            for (int i = this.Position.Column - 1; i >= 0; i--)
             {
                 var position = new Position(this.Position.Line, i);
                 if (IsMovementValid(position))

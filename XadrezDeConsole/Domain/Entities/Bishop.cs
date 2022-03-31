@@ -16,7 +16,6 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            //go through diagonals
             var goOn = true;
             var position = new Position(this.Position.Line, this.Position.Column);
             while (goOn)
