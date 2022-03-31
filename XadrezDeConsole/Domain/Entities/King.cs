@@ -16,13 +16,32 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var response = new bool[this.Board.Lines, this.Board.Columns];
 
-            for (int i = 0; i < this.Board.Lines; i++)
-            {
-                for (int j = 0; j < this.Board.Columns; j++)
-                {
-                    response[i, j] = IsMovementValid(new Position(i, j));
-                }
-            }
+            var position = new Position(this.Position.Line + 1, this.Position.Column);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+            position = new Position(this.Position.Line + 1, this.Position.Column + 1);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+            position = new Position(this.Position.Line + 1, this.Position.Column - 1);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+
+            position = new Position(this.Position.Line - 1, this.Position.Column);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+            position = new Position(this.Position.Line - 1, this.Position.Column + 1);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+            position = new Position(this.Position.Line - 1, this.Position.Column - 1);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+
+            position = new Position(this.Position.Line, this.Position.Column + 1);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
+            position = new Position(this.Position.Line, this.Position.Column - 1);
+            if (IsMovementValid(position))
+                response[position.Line, position.Column] = true;
 
             return response;
         }
