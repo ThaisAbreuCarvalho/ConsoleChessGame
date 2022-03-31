@@ -7,4 +7,4 @@
  <p>You're welcome to contribute if you want to, just create a branch from de development one... :wink:</p>
  </div>
  
-- The rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are under implementation
+- Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation
