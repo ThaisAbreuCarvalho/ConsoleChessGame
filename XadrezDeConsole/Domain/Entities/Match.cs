@@ -9,7 +9,7 @@ namespace XadrezDeConsole.Domain.Entities
     {
         public Board Board { get; private set; }
         private int Turn;
-        private Color CurrentPlayer;
+        public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
 
         public Match()
@@ -18,6 +18,35 @@ namespace XadrezDeConsole.Domain.Entities
             this.Turn = 1;
             this.CurrentPlayer = Color.Yellow;
             SetBoard();
+        }
+
+        public void ExecuteMovement(Position origin, Position destination)
+        {
+            MovePiece(origin, destination);
+            this.Turn++;
+            ChangePlayer();
+        }
+
+        public void ChangePlayer()
+        {
+            if (this.CurrentPlayer == Color.Yellow)
+            {
+                this.CurrentPlayer = Color.Red;
+            }
+            else
+            {
+                this.CurrentPlayer = Color.Yellow;
+            }
+        }
+
+        public void ValidateMove(Position position)
+        {
+            if (!this.Board.IsValidPosition(position))
+            {
+                throw new GameException($"Position Invalid: {position}");
+            }
+
+            
         }
 
         public void MovePiece(Position origin, Position destination)
