@@ -39,14 +39,17 @@ namespace XadrezDeConsole.Domain.Entities
             }
         }
 
-        public void ValidateMove(Position position)
+        public void ValidateOrigin(Position position)
         {
-            if (!this.Board.IsValidPosition(position))
+            if (!this.Board.IsValidPosition(position) || this.Board.Piece(position)?.Color != this.CurrentPlayer)
             {
                 throw new GameException($"Position Invalid: {position}");
             }
 
-            
+            if (this.Board.Piece(position) == null)
+            {
+                throw new GameException($"No Piece Selected: {position}");
+            }
         }
 
         public void MovePiece(Position origin, Position destination)
