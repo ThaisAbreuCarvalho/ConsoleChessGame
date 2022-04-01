@@ -19,12 +19,18 @@ namespace XadrezDeConsole
                 {
                     Console.Clear();
                     Screen.PrintBoard(match.Board);
+                    Console.Write("Player " + EnumExtension.GetEnumDescription(match.CurrentPlayer) + " is your turn to move...");
+                    Console.WriteLine();
                     Console.WriteLine("From: ");
                     Position origin = Screen.ReadPosition().ToPosition(match.Board);
+                    match.ValidateOrigin(origin);
+                    var possibleMovements = match.Board.Piece(origin).PossibleMovements();
+                    Console.Clear();
+                    Screen.PrintBoard(match.Board, possibleMovements);
                     Console.WriteLine("To: ");
                     Position destination = Screen.ReadPosition().ToPosition(match.Board);
-
-                    match.MovePiece(origin, destination);
+                    match.Board.IsValidPosition(destination);
+                    match.ExecuteMovement(origin, destination);
                 }
             }
             catch (GameException ex)

@@ -36,13 +36,13 @@ namespace XadrezDeConsole.Domain.Entities
             }
 
             position = new Position(this.Position.Line + (direction * -1), this.Position.Column - 1);
-            if (IsMovementValid(position))
+            if (IsMovementValid(position) && this.Board.Piece(position) != null)
             {
                 response[position.Line, position.Column] = true;
             }
 
             position = new Position(this.Position.Line + (direction * -1), this.Position.Column + 1);
-            if (IsMovementValid(position))
+            if (IsMovementValid(position) && this.Board.Piece(position) != null)
             {
                 response[position.Line, position.Column] = true;
             }

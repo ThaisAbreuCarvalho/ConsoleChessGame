@@ -1,6 +1,7 @@
 ﻿using XadrezDeConsole.Domain.Abstraction;
 using XadrezDeConsole.Helpers;
 using XadrezDeConsole.Helpers.Enums;
+using XadrezDeConsole.Helpers.GameException;
 
 namespace XadrezDeConsole.Domain.Entities
 {
@@ -8,7 +9,7 @@ namespace XadrezDeConsole.Domain.Entities
     {
         public Board Board { get; private set; }
         private int Turn;
-        private Color CurrentPlayer;
+        public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
 
         public Match()
@@ -19,12 +20,53 @@ namespace XadrezDeConsole.Domain.Entities
             SetBoard();
         }
 
+        public void ExecuteMovement(Position origin, Position destination)
+        {
+            MovePiece(origin, destination);
+            this.Turn++;
+            ChangePlayer();
+        }
+
+        public void ChangePlayer()
+        {
+            if (this.CurrentPlayer == Color.Yellow)
+            {
+                this.CurrentPlayer = Color.Red;
+            }
+            else
+            {
+                this.CurrentPlayer = Color.Yellow;
+            }
+        }
+
+        public void ValidateOrigin(Position position)
+        {
+            if (!this.Board.IsValidPosition(position) || this.Board.Piece(position)?.Color != this.CurrentPlayer)
+            {
+                throw new GameException($"Position Invalid: {position}");
+            }
+
+            if (this.Board.Piece(position) == null)
+            {
+                throw new GameException($"No Piece Selected: {position}");
+            }
+        }
+
         public void MovePiece(Position origin, Position destination)
         {
-            Piece piece = this.Board.RemovePiece(origin);
-            piece.Move();
-            Piece pieceTrapped = this.Board.RemovePiece(destination);
-            this.Board.InsertPiece(piece, destination);
+            var possibleMovements = this.Board.Piece(origin).PossibleMovements();
+            if (possibleMovements[destination.Line, destination.Column])
+            {
+                Piece piece = this.Board.RemovePiece(origin);
+                piece.Move();
+                Piece pieceTrapped = this.Board.RemovePiece(destination);
+                this.Board.InsertPiece(piece, destination);
+                piece.Move();
+            }
+            else
+            {
+                throw new GameException($"Position Invalid: {destination}");
+            }
         }
 
         private void SetBoard()
