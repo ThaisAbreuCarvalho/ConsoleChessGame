@@ -18,7 +18,7 @@ namespace XadrezDeConsole
                 while (!match.IsFinished)
                 {
                     Console.Clear();
-                    Screen.PrintBoard(match.Board);
+                    Screen.PrintBoard(match.Board, match);
                     Console.Write("Player " + EnumExtension.GetEnumDescription(match.CurrentPlayer) + " is your turn to move...");
                     Console.WriteLine();
                     Console.WriteLine("From: ");
