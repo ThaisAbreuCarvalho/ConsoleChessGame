@@ -1,12 +1,21 @@
 ﻿using System;
 using XadrezDeConsole.Domain.Abstraction;
+using XadrezDeConsole.Domain.Entities;
 
 namespace XadrezDeConsole.Helpers
 {
     public class Screen
     {
-        public static void PrintBoard(Board board)
+        public static void PrintBoard(Board board, Match match)
         {
+            foreach(var piece in match.GetYellowCapturedPieces())
+            {
+                PrintPiece(piece);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+
             for (int i = 0; i < board.Lines; i++)
             {
                 Console.Write(board.Columns - i + "  ");
@@ -19,6 +28,16 @@ namespace XadrezDeConsole.Helpers
             }
 
             Console.WriteLine("    a   b   c   d   e   f   g   h");
+
+            Console.WriteLine();
+
+            foreach (var piece in match.GetRedCapturedPieces())
+            {
+                PrintPiece(piece);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
         }
 
         public static void PrintBoard(Board board, bool[,] possibleMovements)
