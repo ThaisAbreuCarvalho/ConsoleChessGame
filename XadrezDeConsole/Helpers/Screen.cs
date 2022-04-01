@@ -12,13 +12,7 @@ namespace XadrezDeConsole.Helpers
                 Console.Write(board.Columns - i + "  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
-                    if (board.Piece(i, j) == null)
-                    {
-                        Console.Write(" - ");
-                    }
-
                     PrintPiece(board.Piece(i, j));
-                    Console.Write(" ");
                 }
                 Console.WriteLine();
                 Console.WriteLine();
@@ -27,15 +21,45 @@ namespace XadrezDeConsole.Helpers
             Console.WriteLine("    a   b   c   d   e   f   g   h");
         }
 
-        public static void PrintPiece(Piece piece)
+        public static void PrintBoard(Board board, bool[,] possibleMovements)
         {
-            if (piece != null)
+            for (int i = 0; i < board.Lines; i++)
             {
-                Console.ForegroundColor = (ConsoleColor)piece.Color;
+                Console.Write(board.Columns - i + "  ");
+                for (int j = 0; j < board.Columns; j++)
+                {
+                    if (possibleMovements[i, j] == true)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    }
+                    PrintPiece(board.Piece(i, j));
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+                Console.WriteLine();
+                Console.WriteLine();
             }
 
-            Console.Write(piece);
-            Console.ForegroundColor= ConsoleColor.Gray;
+            Console.WriteLine("    a   b   c   d   e   f   g   h");
+        }
+
+
+        public static void PrintPiece(Piece piece)
+        {
+            if (piece == null)
+            {
+                Console.Write(" -  ");
+            }
+            else
+            {
+                if (piece != null)
+                {
+                    Console.ForegroundColor = (ConsoleColor)piece.Color;
+                }
+
+                Console.Write(piece);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write(" ");
+            }
         }
 
         public static ScreenPositon ReadPosition()

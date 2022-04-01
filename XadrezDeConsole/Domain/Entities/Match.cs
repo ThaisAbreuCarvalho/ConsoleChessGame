@@ -1,6 +1,7 @@
 ﻿using XadrezDeConsole.Domain.Abstraction;
 using XadrezDeConsole.Helpers;
 using XadrezDeConsole.Helpers.Enums;
+using XadrezDeConsole.Helpers.GameException;
 
 namespace XadrezDeConsole.Domain.Entities
 {
@@ -21,10 +22,19 @@ namespace XadrezDeConsole.Domain.Entities
 
         public void MovePiece(Position origin, Position destination)
         {
-            Piece piece = this.Board.RemovePiece(origin);
-            piece.Move();
-            Piece pieceTrapped = this.Board.RemovePiece(destination);
-            this.Board.InsertPiece(piece, destination);
+            var possibleMovements = this.Board.Piece(origin).PossibleMovements();
+            if (possibleMovements[destination.Line, destination.Column])
+            {
+                Piece piece = this.Board.RemovePiece(origin);
+                piece.Move();
+                Piece pieceTrapped = this.Board.RemovePiece(destination);
+                this.Board.InsertPiece(piece, destination);
+                piece.Move();
+            }
+            else
+            {
+                throw new GameException($"Position Invalid: {destination}");
+            }
         }
 
         private void SetBoard()

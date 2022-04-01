@@ -21,9 +21,11 @@ namespace XadrezDeConsole
                     Screen.PrintBoard(match.Board);
                     Console.WriteLine("From: ");
                     Position origin = Screen.ReadPosition().ToPosition(match.Board);
+                    var possibleMovements = match.Board.Piece(origin).PossibleMovements();
+                    Console.Clear();
+                    Screen.PrintBoard(match.Board, possibleMovements);
                     Console.WriteLine("To: ");
                     Position destination = Screen.ReadPosition().ToPosition(match.Board);
-
                     match.MovePiece(origin, destination);
                 }
             }
