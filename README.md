@@ -9,7 +9,7 @@
   - Pieces Movements Rules;<br>
   - Turn changes;<br>
   - Control of turns;<br>
-  - Control of captured pieces;
+  - Control of captured pieces; <br>
   - King in check control;
   
 <h5> obs: Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation</h25>
