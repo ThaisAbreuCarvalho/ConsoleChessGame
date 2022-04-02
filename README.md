@@ -5,10 +5,11 @@
  <p>You're welcome to contribute if you want to, just create a branch from de development one... :wink:</p>
  </div>
  <h2>Features released at master branch</h2>
-  - Pieces Moviments; <br>
-  - Pieces Moviments Rules;<br>
+  - Pieces Movements; <br>
+  - Pieces Movements Rules;<br>
   - Turn changes;<br>
   - Control of turns;<br>
   - Control of captured pieces;
+  - King in check control;
   
 <h5> obs: Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation</h25>
