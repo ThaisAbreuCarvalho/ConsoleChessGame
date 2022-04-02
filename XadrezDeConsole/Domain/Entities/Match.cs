@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using XadrezDeConsole.Domain.Abstraction;
 using XadrezDeConsole.Helpers;
@@ -11,6 +12,7 @@ namespace XadrezDeConsole.Domain.Entities
     {
         public Board Board { get; private set; }
         private int Turn;
+        public bool check { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
         private HashSet<Piece> MatchPieces;
@@ -28,9 +30,32 @@ namespace XadrezDeConsole.Domain.Entities
 
         public void ExecuteMovement(Position origin, Position destination)
         {
-            MovePiece(origin, destination);
-            this.Turn++;
-            ChangePlayer();
+            var possibleMovements = this.Board.Piece(origin).PossibleMovements();
+            if (possibleMovements[destination.Line, destination.Column])
+            {
+                var pieceTrapped = MovePiece(origin, destination);
+                var inCheck = VerifyCheckmate(this.CurrentPlayer);
+                this.check = inCheck;
+                if (inCheck)
+                {
+                    MovePiece(destination, origin);
+                    if(pieceTrapped != null)
+                    {
+                        this.Board.InsertPiece(pieceTrapped, destination);
+                        this.MatchPieces.Add(pieceTrapped);
+                        this.CapturedPieces.Remove(pieceTrapped);
+                    }
+                }
+                else
+                {
+                    this.Turn++;
+                    ChangePlayer();
+                }
+            }
+            else
+            {
+                throw new GameException($"Position Invalid: {destination}");
+            }
         }
 
         public void ChangePlayer()
@@ -58,26 +83,21 @@ namespace XadrezDeConsole.Domain.Entities
             }
         }
 
-        public void MovePiece(Position origin, Position destination)
+        public Piece MovePiece(Position origin, Position destination)
         {
-            var possibleMovements = this.Board.Piece(origin).PossibleMovements();
-            if (possibleMovements[destination.Line, destination.Column])
-            {
-                Piece piece = this.Board.RemovePiece(origin);
-                piece.Move();
-                Piece pieceTrapped = this.Board.RemovePiece(destination);
-                this.Board.InsertPiece(piece, destination);
-                piece.Move();
+            Piece piece = this.Board.RemovePiece(origin);
+            piece.Move();
+            Piece pieceTrapped = this.Board.RemovePiece(destination);
+            this.Board.InsertPiece(piece, destination);
+            piece.Move();
 
-                if (pieceTrapped != null)
-                {
-                    this.CapturedPieces.Add(pieceTrapped);
-                }
-            }
-            else
+            if (pieceTrapped != null)
             {
-                throw new GameException($"Position Invalid: {destination}");
+                this.CapturedPieces.Add(pieceTrapped);
+                this.MatchPieces.Remove(pieceTrapped);
             }
+
+            return pieceTrapped;
         }
 
         public void PlacePiece(Piece piece, Position position)
@@ -132,10 +152,30 @@ namespace XadrezDeConsole.Domain.Entities
         {
             return this.CapturedPieces.Where(x => x.Color == Color.Red).ToHashSet();
         }
-        
+
         public HashSet<Piece> GetYellowCapturedPieces()
         {
             return this.CapturedPieces.Where(x => x.Color == Color.Yellow).ToHashSet();
+        }
+
+        public bool VerifyCheckmate(Color color)
+        {
+            var enemyPieces = this.MatchPieces.Where(x => x.Color != color);
+            var king = this.MatchPieces.Where(x => x is King && x.Color == color).FirstOrDefault();
+            bool inCheck = false;
+
+            foreach (var enemy in enemyPieces)
+            {
+                inCheck = enemy.PossibleMovements()[king.Position.Line, king.Position.Column];
+                if (inCheck)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(EnumExtension.GetEnumDescription(king.Color) + " king is in Check!");
+                    break;
+                }
+            }
+
+            return inCheck;
         }
     }
 }

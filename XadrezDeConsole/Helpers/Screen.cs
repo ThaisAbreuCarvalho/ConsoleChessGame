@@ -37,6 +37,11 @@ namespace XadrezDeConsole.Helpers
             }
 
             Console.WriteLine();
+            match.VerifyCheckmate(match.CurrentPlayer);
+            if (match.check)
+            {
+                Console.WriteLine("You can't put yourself in check, try again!");
+            }
             Console.WriteLine();
         }
 
