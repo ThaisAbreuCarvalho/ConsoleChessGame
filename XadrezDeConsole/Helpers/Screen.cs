@@ -1,6 +1,7 @@
 ﻿using System;
 using XadrezDeConsole.Domain.Abstraction;
 using XadrezDeConsole.Domain.Entities;
+using XadrezDeConsole.Helpers.Enums;
 
 namespace XadrezDeConsole.Helpers
 {
@@ -8,7 +9,7 @@ namespace XadrezDeConsole.Helpers
     {
         public static void PrintBoard(Board board, Match match)
         {
-            foreach(var piece in match.GetYellowCapturedPieces())
+            foreach (var piece in match.GetYellowCapturedPieces())
             {
                 PrintPiece(piece);
             }
@@ -37,11 +38,22 @@ namespace XadrezDeConsole.Helpers
             }
 
             Console.WriteLine();
-            match.VerifyCheckmate(match.CurrentPlayer);
-            if (match.check)
+
+            switch (match.check)
             {
-                Console.WriteLine("You can't put yourself in check, try again!");
+                case ChessMove.Check:
+                    Console.WriteLine($"{match.CurrentPlayer} your king is in {EnumExtension.GetEnumDescription(match.check)}!");
+                    break;
+
+                case ChessMove.Checkmate:
+                    Console.WriteLine($"{EnumExtension.GetEnumDescription(match.check)} {match.CurrentPlayer} wins!");
+                    match.Finish();
+                    break;
+
+                default:
+                    break;
             }
+
             Console.WriteLine();
         }
 

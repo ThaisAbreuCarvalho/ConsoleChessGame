@@ -12,7 +12,7 @@ namespace XadrezDeConsole.Domain.Entities
     {
         public Board Board { get; private set; }
         private int Turn;
-        public bool check { get; private set; }
+        public ChessMove check { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
         private HashSet<Piece> MatchPieces;
@@ -25,6 +25,7 @@ namespace XadrezDeConsole.Domain.Entities
             this.CurrentPlayer = Color.Yellow;
             this.MatchPieces = new HashSet<Piece>();
             this.CapturedPieces = new HashSet<Piece>();
+            this.check = ChessMove.None;
             SetBoard();
         }
 
@@ -34,22 +35,27 @@ namespace XadrezDeConsole.Domain.Entities
             if (possibleMovements[destination.Line, destination.Column])
             {
                 var pieceTrapped = MovePiece(origin, destination);
-                var inCheck = VerifyCheckmate(this.CurrentPlayer);
-                this.check = inCheck;
-                if (inCheck)
+                this.check = VerifyCheck(this.CurrentPlayer);
+                switch (this.check)
                 {
-                    MovePiece(destination, origin);
-                    if(pieceTrapped != null)
-                    {
-                        this.Board.InsertPiece(pieceTrapped, destination);
-                        this.MatchPieces.Add(pieceTrapped);
-                        this.CapturedPieces.Remove(pieceTrapped);
-                    }
-                }
-                else
-                {
-                    this.Turn++;
-                    ChangePlayer();
+                    case ChessMove.Check:
+                        MovePiece(destination, origin);
+                        if (pieceTrapped != null)
+                        {
+                            this.Board.InsertPiece(pieceTrapped, destination);
+                            this.MatchPieces.Add(pieceTrapped);
+                            this.CapturedPieces.Remove(pieceTrapped);
+                        }
+                        break;
+
+                    case ChessMove.Checkmate:
+                        break;
+
+                    default:
+                        this.Turn++;
+                        ChangePlayer();
+                        this.check = VerifyCheck(this.CurrentPlayer);
+                        break;
                 }
             }
             else
@@ -158,24 +164,39 @@ namespace XadrezDeConsole.Domain.Entities
             return this.CapturedPieces.Where(x => x.Color == Color.Yellow).ToHashSet();
         }
 
-        public bool VerifyCheckmate(Color color)
+        public ChessMove VerifyCheck(Color color)
         {
             var enemyPieces = this.MatchPieces.Where(x => x.Color != color);
             var king = this.MatchPieces.Where(x => x is King && x.Color == color).FirstOrDefault();
-            bool inCheck = false;
 
             foreach (var enemy in enemyPieces)
             {
-                inCheck = enemy.PossibleMovements()[king.Position.Line, king.Position.Column];
+                var inCheck = enemy.PossibleMovements()[king.Position.Line, king.Position.Column];
                 if (inCheck)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(EnumExtension.GetEnumDescription(king.Color) + " king is in Check!");
-                    break;
+                    var kingMovements = king.PossibleMovements();
+
+                    for (int i = 0; i < this.Board.Lines; i++)
+                    {
+                        for (int j = 0; j < this.Board.Columns; j++)
+                        {
+                            if (kingMovements[i, j] == true && enemy.PossibleMovements()[i, j] == false)
+                            {
+                                return ChessMove.Check;
+                            }
+                        }
+                    }
+
+                    return ChessMove.Checkmate;
                 }
             }
 
-            return inCheck;
+            return ChessMove.None;
+        }
+
+        public void Finish()
+        {
+            this.IsFinished = true;
         }
     }
 }
