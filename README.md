@@ -10,6 +10,7 @@
   - Turn changes;<br>
   - Control of turns;<br>
   - Control of captured pieces; <br>
-  - King in check control;
+  - King in check control;<br>
+  - Check and checkmate logics;
   
 <h5> obs: Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation</h25>

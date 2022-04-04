@@ -26,9 +26,9 @@ namespace XadrezDeConsole.Domain.Entities
                 response[position.Line, position.Column] = true;
             }
 
-            position = new Position(this.Position.Line + (direction * -2), this.Position.Column);
-            if (this.Movements == 0)
+            if (this.Movements == 0 && response[position.Line, position.Column] == true)
             {
+                position = new Position(this.Position.Line + (direction * -2), this.Position.Column);
                 if (IsMovementValid(position) && this.Board.Piece(position) == null)
                 {
                     response[position.Line, position.Column] = true;

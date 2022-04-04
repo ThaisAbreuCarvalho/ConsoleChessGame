@@ -22,6 +22,10 @@ namespace XadrezDeConsole.Domain.Entities
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
+                    if (this.Board.Piece(position.Line, position.Column) != null)
+                    {
+                        break;
+                    }
                 }
                 else
                 {
@@ -35,6 +39,10 @@ namespace XadrezDeConsole.Domain.Entities
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
+                    if (this.Board.Piece(position.Line, position.Column) != null)
+                    {
+                        break;
+                    }
                 }
                 else
                 {
@@ -48,6 +56,10 @@ namespace XadrezDeConsole.Domain.Entities
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
+                    if (this.Board.Piece(position.Line, position.Column) != null)
+                    {
+                        break;
+                    }
                 }
                 else
                 {
@@ -61,6 +73,10 @@ namespace XadrezDeConsole.Domain.Entities
                 if (IsMovementValid(position))
                 {
                     response[position.Line, position.Column] = true;
+                    if (this.Board.Piece(position.Line, position.Column) != null)
+                    {
+                        break;
+                    }
                 }
                 else
                 {
