@@ -15,7 +15,8 @@ namespace XadrezDeConsole.Domain.Entities
         public ChessMove check { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
-        private HashSet<Piece> MatchPieces;
+        public Position CastlingPosition { get; set; }
+        public HashSet<Piece> MatchPieces { get; private set; }
         private HashSet<Piece> CapturedPieces;
 
         public Match()
@@ -31,7 +32,9 @@ namespace XadrezDeConsole.Domain.Entities
 
         public void ExecuteMovement(Position origin, Position destination)
         {
-            var possibleMovements = this.Board.Piece(origin).PossibleMovements();
+            var piece = this.Board.Piece(origin);
+            var possibleMovements = piece.PossibleMovements();
+
             if (possibleMovements[destination.Line, destination.Column])
             {
                 var pieceTrapped = MovePiece(origin, destination);
@@ -52,6 +55,11 @@ namespace XadrezDeConsole.Domain.Entities
                         break;
 
                     default:
+                        if (CastlingPosition.Line == destination.Line && CastlingPosition.Column == destination.Column)
+                        {
+                            CastlingMove(piece);
+                        }
+
                         this.Turn++;
                         ChangePlayer();
                         this.check = VerifyCheck(this.CurrentPlayer);
@@ -115,14 +123,14 @@ namespace XadrezDeConsole.Domain.Entities
         private void SetBoard()
         {
             //yellow
-            PlacePiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('a', 1).ToPosition(this.Board));
-            PlacePiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('b', 1).ToPosition(this.Board));
+            PlacePiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('a', 1).ToPosition(this.Board));
+            PlacePiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('b', 1).ToPosition(this.Board));
             PlacePiece(new Bishop(this.Board, Color.Yellow), new ScreenPositon('c', 1).ToPosition(this.Board));
-            PlacePiece(new King(this.Board, Color.Yellow), new ScreenPositon('d', 1).ToPosition(this.Board));
-            PlacePiece(new Queen(this.Board, Color.Yellow), new ScreenPositon('e', 1).ToPosition(this.Board));
+            PlacePiece(new King(this.Board, Color.Yellow, this), new ScreenPositon('e', 1).ToPosition(this.Board));
+            PlacePiece(new Queen(this.Board, Color.Yellow), new ScreenPositon('d', 1).ToPosition(this.Board));
             PlacePiece(new Bishop(this.Board, Color.Yellow), new ScreenPositon('f', 1).ToPosition(this.Board));
-            PlacePiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('g', 1).ToPosition(this.Board));
-            PlacePiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('h', 1).ToPosition(this.Board));
+            PlacePiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('g', 1).ToPosition(this.Board));
+            PlacePiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('h', 1).ToPosition(this.Board));
 
             PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(0, 2)), new ScreenPositon('a', 2).ToPosition(this.Board));
             PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(1, 2)), new ScreenPositon('b', 2).ToPosition(this.Board));
@@ -134,14 +142,14 @@ namespace XadrezDeConsole.Domain.Entities
             PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(7, 2)), new ScreenPositon('h', 2).ToPosition(this.Board));
 
             //red
-            PlacePiece(new Knight(this.Board, Color.Red), new ScreenPositon('a', 8).ToPosition(this.Board));
-            PlacePiece(new Rook(this.Board, Color.Red), new ScreenPositon('b', 8).ToPosition(this.Board));
+            PlacePiece(new Rook(this.Board, Color.Red), new ScreenPositon('a', 8).ToPosition(this.Board));
+            PlacePiece(new Knight(this.Board, Color.Red), new ScreenPositon('b', 8).ToPosition(this.Board));
             PlacePiece(new Bishop(this.Board, Color.Red), new ScreenPositon('c', 8).ToPosition(this.Board));
-            PlacePiece(new King(this.Board, Color.Red), new ScreenPositon('d', 8).ToPosition(this.Board));
-            PlacePiece(new Queen(this.Board, Color.Red), new ScreenPositon('e', 8).ToPosition(this.Board));
+            PlacePiece(new King(this.Board, Color.Red, this), new ScreenPositon('e', 8).ToPosition(this.Board));
+            PlacePiece(new Queen(this.Board, Color.Red), new ScreenPositon('d', 8).ToPosition(this.Board));
             PlacePiece(new Bishop(this.Board, Color.Red), new ScreenPositon('f', 8).ToPosition(this.Board));
-            PlacePiece(new Rook(this.Board, Color.Red), new ScreenPositon('g', 8).ToPosition(this.Board));
-            PlacePiece(new Knight(this.Board, Color.Red), new ScreenPositon('h', 8).ToPosition(this.Board));
+            PlacePiece(new Knight(this.Board, Color.Red), new ScreenPositon('g', 8).ToPosition(this.Board));
+            PlacePiece(new Rook(this.Board, Color.Red), new ScreenPositon('h', 8).ToPosition(this.Board));
 
 
             PlacePiece(new Pawn(this.Board, Color.Red, new Position(0, 7)), new ScreenPositon('a', 7).ToPosition(this.Board));
@@ -197,6 +205,22 @@ namespace XadrezDeConsole.Domain.Entities
         public void Finish()
         {
             this.IsFinished = true;
+        }
+
+        public void CastlingMove(Piece piece)
+        {
+            var rooks = this.MatchPieces.Where(x => x.Color == this.CurrentPlayer && x is Rook);
+
+            if(piece.Position.Column == 2)
+            {
+                var rook = rooks.FirstOrDefault(x => x.Position.Column == 0);
+                MovePiece(rook.Position, new Position(piece.Position.Line, piece.Position.Column + 1));
+            }
+            else
+            {
+                var rook = rooks.FirstOrDefault(x => x.Position.Column == 7);
+                MovePiece(rook.Position, new Position(piece.Position.Line, piece.Position.Column - 1));
+            }
         }
     }
 }
