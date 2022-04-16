@@ -16,6 +16,8 @@ namespace XadrezDeConsole.Domain.Entities
         public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
         public Position CastlingPosition { get; set; }
+        public Piece EnPassant { get; set; }
+        public bool EnPassantAllowed { get; set; }
         public HashSet<Piece> MatchPieces { get; private set; }
         private HashSet<Piece> CapturedPieces;
 
@@ -55,9 +57,18 @@ namespace XadrezDeConsole.Domain.Entities
                         break;
 
                     default:
-                        if (CastlingPosition.Line == destination.Line && CastlingPosition.Column == destination.Column)
+                        if (CastlingPosition != null && (CastlingPosition?.Line == destination.Line && CastlingPosition?.Column == destination.Column))
                         {
                             CastlingMove(piece);
+                        }
+
+                        if (piece is Pawn && piece.Movements == 1)
+                        {
+                            this.EnPassant = piece;
+                        }
+                        else if (piece is Pawn && this.EnPassantAllowed)
+                        {
+                            IsEnPassantMove(piece, destination);
                         }
 
                         this.Turn++;
@@ -103,7 +114,6 @@ namespace XadrezDeConsole.Domain.Entities
             piece.Move();
             Piece pieceTrapped = this.Board.RemovePiece(destination);
             this.Board.InsertPiece(piece, destination);
-            piece.Move();
 
             if (pieceTrapped != null)
             {
@@ -132,14 +142,14 @@ namespace XadrezDeConsole.Domain.Entities
             PlacePiece(new Knight(this.Board, Color.Yellow), new ScreenPositon('g', 1).ToPosition(this.Board));
             PlacePiece(new Rook(this.Board, Color.Yellow), new ScreenPositon('h', 1).ToPosition(this.Board));
 
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(0, 2)), new ScreenPositon('a', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(1, 2)), new ScreenPositon('b', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(2, 2)), new ScreenPositon('c', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(3, 2)), new ScreenPositon('d', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(4, 2)), new ScreenPositon('e', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(5, 2)), new ScreenPositon('f', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(6, 2)), new ScreenPositon('g', 2).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(7, 2)), new ScreenPositon('h', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(0, 2), this), new ScreenPositon('a', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(1, 2), this), new ScreenPositon('b', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(2, 2), this), new ScreenPositon('c', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(3, 2), this), new ScreenPositon('d', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(4, 2), this), new ScreenPositon('e', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(5, 2), this), new ScreenPositon('f', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(6, 2), this), new ScreenPositon('g', 2).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Yellow, new Position(7, 2), this), new ScreenPositon('h', 2).ToPosition(this.Board));
 
             //red
             PlacePiece(new Rook(this.Board, Color.Red), new ScreenPositon('a', 8).ToPosition(this.Board));
@@ -152,14 +162,14 @@ namespace XadrezDeConsole.Domain.Entities
             PlacePiece(new Rook(this.Board, Color.Red), new ScreenPositon('h', 8).ToPosition(this.Board));
 
 
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(0, 7)), new ScreenPositon('a', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(1, 7)), new ScreenPositon('b', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(2, 7)), new ScreenPositon('c', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(3, 7)), new ScreenPositon('d', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(4, 7)), new ScreenPositon('e', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(5, 7)), new ScreenPositon('f', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(6, 7)), new ScreenPositon('g', 7).ToPosition(this.Board));
-            PlacePiece(new Pawn(this.Board, Color.Red, new Position(7, 7)), new ScreenPositon('h', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(0, 7), this), new ScreenPositon('a', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(1, 7), this), new ScreenPositon('b', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(2, 7), this), new ScreenPositon('c', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(3, 7), this), new ScreenPositon('d', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(4, 7), this), new ScreenPositon('e', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(5, 7), this), new ScreenPositon('f', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(6, 7), this), new ScreenPositon('g', 7).ToPosition(this.Board));
+            PlacePiece(new Pawn(this.Board, Color.Red, new Position(7, 7), this), new ScreenPositon('h', 7).ToPosition(this.Board));
         }
 
         public HashSet<Piece> GetRedCapturedPieces()
@@ -211,7 +221,7 @@ namespace XadrezDeConsole.Domain.Entities
         {
             var rooks = this.MatchPieces.Where(x => x.Color == this.CurrentPlayer && x is Rook);
 
-            if(piece.Position.Column == 2)
+            if (piece.Position.Column == 2)
             {
                 var rook = rooks.FirstOrDefault(x => x.Position.Column == 0);
                 MovePiece(rook.Position, new Position(piece.Position.Line, piece.Position.Column + 1));
@@ -221,6 +231,23 @@ namespace XadrezDeConsole.Domain.Entities
                 var rook = rooks.FirstOrDefault(x => x.Position.Column == 7);
                 MovePiece(rook.Position, new Position(piece.Position.Line, piece.Position.Column - 1));
             }
+
+            this.CastlingPosition = null;
+        }
+
+        public void IsEnPassantMove(Piece piece, Position destination)
+        {
+            var direction = piece.Color == Color.Red ? 1 : -1;
+
+            if (this.EnPassant?.Position?.Line + direction == destination.Line && this.EnPassant?.Position?.Column == destination.Column)
+            {
+                Piece pieceTrapped = this.Board.RemovePiece(this.EnPassant.Position);
+                this.CapturedPieces.Add(pieceTrapped);
+                this.MatchPieces.Remove(pieceTrapped);
+            }
+
+            this.EnPassant = null;
+            this.EnPassantAllowed = false;
         }
     }
 }

@@ -11,7 +11,8 @@
   - Control of turns;<br>
   - Control of captured pieces; <br>
   - King in check control;<br>
-  - Check and checkmate logics; <br>
-  - Castling logics;
+  - Check and checkmate logics;<br>
+  - Castling logics;<br>
+  - En Passant logics;
   
 <h5> obs: Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation</h25>

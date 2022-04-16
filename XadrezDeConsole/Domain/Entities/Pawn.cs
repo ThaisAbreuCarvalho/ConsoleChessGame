@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using XadrezDeConsole.Domain.Abstraction;
 using XadrezDeConsole.Helpers.Enums;
@@ -8,11 +9,13 @@ namespace XadrezDeConsole.Domain.Entities
 {
     public class Pawn : Piece
     {
+        public Match Match;
         public Position InitialPosition { get; set; }
 
-        public Pawn(Board board, Color color, Position initialPosition) : base(board, color)
+        public Pawn(Board board, Color color, Position initialPosition, Match match) : base(board, color)
         {
-            this.Position = InitialPosition;
+            this.Position = initialPosition;
+            this.Match = match;
         }
 
         public override bool[,] PossibleMovements()
@@ -47,12 +50,42 @@ namespace XadrezDeConsole.Domain.Entities
                 response[position.Line, position.Column] = true;
             }
 
+            VerifyEnPassant(response);
+
             return response;
         }
 
         public override string ToString()
         {
             return " P ";
+        }
+
+        public void VerifyEnPassant(bool[,] possibleMovements)
+        {
+            var direction = this.Color == Color.Red ? 1 : -1;
+
+            if (this.Position.Line == 3 || this.Position.Line == 4)
+            {
+                var positionLeft = new Position(this.Position.Line, this.Position.Column - 1);
+                var positionRight = new Position(this.Position.Line, this.Position.Column + 1);
+
+                if (this.Board.IsValidPosition(positionLeft) && this.Board.Piece(positionLeft) != null && Match.EnPassant != null)
+                {
+                    if (this.Board.IsValidPosition(new Position(this.Position.Line + direction, this.Position.Column - 1)) && Match.EnPassant.Equals(this.Board.Piece(positionLeft)))
+                    {
+                        possibleMovements[this.Position.Line + direction, this.Position.Column - 1] = true;
+                        Match.EnPassantAllowed = true;
+                    }
+                }
+                else if (this.Board.IsValidPosition(positionRight) && this.Board.Piece(positionRight) != null && Match.EnPassant != null)
+                {
+                    if (this.Board.IsValidPosition(new Position(this.Position.Line + direction, this.Position.Column + 1)) && Match.EnPassant.Equals(this.Board.Piece(positionRight)))
+                    {
+                        possibleMovements[this.Position.Line + direction, this.Position.Column + 1] = true;
+                        Match.EnPassantAllowed = true;
+                    }
+                }
+            }
         }
     }
 }
