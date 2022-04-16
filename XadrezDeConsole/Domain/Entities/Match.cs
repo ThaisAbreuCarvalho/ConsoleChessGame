@@ -55,6 +55,9 @@ namespace XadrezDeConsole.Domain.Entities
 
                     case ChessMove.Checkmate:
                         break;
+                    
+                    case ChessMove.Stalemate:
+                        break;
 
                     default:
                         if (CastlingPosition != null && (CastlingPosition?.Line == destination.Line && CastlingPosition?.Column == destination.Column))
@@ -97,6 +100,8 @@ namespace XadrezDeConsole.Domain.Entities
 
         public void ValidateOrigin(Position position)
         {
+            VerifyStealmate(position);
+
             if (!this.Board.IsValidPosition(position) || this.Board.Piece(position)?.Color != this.CurrentPlayer)
             {
                 throw new GameException($"Position Invalid: {position}");
@@ -182,7 +187,7 @@ namespace XadrezDeConsole.Domain.Entities
             return this.CapturedPieces.Where(x => x.Color == Color.Yellow).ToHashSet();
         }
 
-        public ChessMove VerifyCheck(Color color)
+        public ChessMove VerifyCheck(Color color, Piece piece = null)
         {
             var enemyPieces = this.MatchPieces.Where(x => x.Color != color);
             var king = this.MatchPieces.Where(x => x is King && x.Color == color).FirstOrDefault();
@@ -190,10 +195,10 @@ namespace XadrezDeConsole.Domain.Entities
             foreach (var enemy in enemyPieces)
             {
                 var inCheck = enemy.PossibleMovements()[king.Position.Line, king.Position.Column];
+                var kingMovements = king.PossibleMovements();
+
                 if (inCheck)
                 {
-                    var kingMovements = king.PossibleMovements();
-
                     for (int i = 0; i < this.Board.Lines; i++)
                     {
                         for (int j = 0; j < this.Board.Columns; j++)
@@ -248,6 +253,42 @@ namespace XadrezDeConsole.Domain.Entities
 
             this.EnPassant = null;
             this.EnPassantAllowed = false;
+        }
+
+        public void VerifyStealmate(Position position)
+        {
+            var stealmate = true;
+
+            if (this.Board.IsValidPosition(position))
+            {
+                var piece = this.Board.Piece(position);
+
+                if(piece is King)
+                {
+                    var kingMovements = piece.PossibleMovements();
+
+                    for (int i = 0; i < this.Board.Lines; i++)
+                    {
+                        for (int j = 0; j < this.Board.Columns; j++)
+                        {
+                            if (kingMovements[i, j] == true)
+                            {
+                                stealmate = false;
+                                break;
+                            }
+                        }
+
+                        if (stealmate == false)
+                            break;
+                    }
+
+                    if (stealmate)
+                    {
+                        this.check = stealmate == false ? ChessMove.None : ChessMove.Stalemate;
+                        this.Finish();
+                    }
+                }
+            }
         }
     }
 }
