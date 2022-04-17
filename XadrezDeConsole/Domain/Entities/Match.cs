@@ -18,6 +18,7 @@ namespace XadrezDeConsole.Domain.Entities
         public Position CastlingPosition { get; set; }
         public Piece EnPassant { get; set; }
         public bool EnPassantAllowed { get; set; }
+        public HashSet<Piece> PossiblePieces { get; private set; }
         public HashSet<Piece> MatchPieces { get; private set; }
         private HashSet<Piece> CapturedPieces;
 
@@ -28,6 +29,7 @@ namespace XadrezDeConsole.Domain.Entities
             this.CurrentPlayer = Color.Yellow;
             this.MatchPieces = new HashSet<Piece>();
             this.CapturedPieces = new HashSet<Piece>();
+            this.PossiblePieces = new HashSet<Piece>();
             this.check = ChessMove.None;
             SetBoard();
         }
@@ -55,7 +57,7 @@ namespace XadrezDeConsole.Domain.Entities
 
                     case ChessMove.Checkmate:
                         break;
-                    
+
                     case ChessMove.Stalemate:
                         break;
 
@@ -72,6 +74,11 @@ namespace XadrezDeConsole.Domain.Entities
                         else if (piece is Pawn && this.EnPassantAllowed)
                         {
                             IsEnPassantMove(piece, destination);
+                        }
+
+                        if (piece is Pawn && (destination.Line == 0 || destination.Line == 7))
+                        {
+                            VerifyPromotion(piece);
                         }
 
                         this.Turn++;
@@ -133,6 +140,7 @@ namespace XadrezDeConsole.Domain.Entities
         {
             this.Board.InsertPiece(piece, position);
             this.MatchPieces.Add(piece);
+            this.PossiblePieces.Add(piece);
         }
 
         private void SetBoard()
@@ -263,7 +271,7 @@ namespace XadrezDeConsole.Domain.Entities
             {
                 var piece = this.Board.Piece(position);
 
-                if(piece is King)
+                if (piece is King)
                 {
                     var kingMovements = piece.PossibleMovements();
 
@@ -289,6 +297,30 @@ namespace XadrezDeConsole.Domain.Entities
                     }
                 }
             }
+        }
+
+        public void VerifyPromotion(Piece piece)
+        {
+            Console.Clear();
+            Console.WriteLine("Congrats pawn promotion, choose a Piece to recover:");
+            this.Board.Promotion = true;
+            var possiblePieces = this.PossiblePieces.Where(x => x.Color == piece.Color);
+            var pieces = possiblePieces.Select(x => x.Name).Distinct();
+
+            foreach (var capturedPiece in pieces)
+            {
+                Console.ForegroundColor = (ConsoleColor)piece.Color;
+                Console.Write(capturedPiece + " ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write(" ");
+            }
+
+            Console.WriteLine();
+            var description = Console.ReadLine();
+            var recoveredPiece = possiblePieces.FirstOrDefault(x => x.Name.ToLower() == description.ToLower());
+
+            this.MatchPieces.Add(recoveredPiece);
+            this.Board.InsertPiece(recoveredPiece, piece.Position);
         }
     }
 }

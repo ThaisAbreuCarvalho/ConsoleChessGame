@@ -10,6 +10,7 @@ namespace XadrezDeConsole.Domain.Entities
     public class King : Piece
     {
         private Match Match;
+        public override string Name { get; set; } = "K";
 
         public King(Board board, Color color, Match match) : base(board, color)
         {
@@ -54,7 +55,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return " K ";
+            return $" {this.Name} ";
         }
 
         public void VerifyCastling(bool[,] possibleMovements)
@@ -82,7 +83,7 @@ namespace XadrezDeConsole.Domain.Entities
                     {
                         var pos1 = this.Board.Piece(new Position(rookPosition.Line, rookPosition.Column - 1)) == null;
                         var pos2 = this.Board.Piece(rookPosition.Line, rookPosition.Column - 2) == null;
-                        if ( pos1 && pos2)
+                        if (pos1 && pos2)
                         {
                             Match.CastlingPosition = new Position(this.Position.Line, this.Position.Column + 2);
                             possibleMovements[this.Position.Line, this.Position.Column + 2] = true;

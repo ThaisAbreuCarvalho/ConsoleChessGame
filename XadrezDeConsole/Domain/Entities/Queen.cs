@@ -8,6 +8,8 @@ namespace XadrezDeConsole.Domain.Entities
 {
     public class Queen : Piece
     {
+        public override string Name { get; set; } = "Q";
+
         public Queen(Board board, Color color) : base(board, color)
         {
         }
@@ -173,7 +175,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return " Q ";
+            return $" {this.Name} ";
         }
     }
 }

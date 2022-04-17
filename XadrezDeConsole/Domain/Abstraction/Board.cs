@@ -7,6 +7,8 @@ namespace XadrezDeConsole.Domain.Abstraction
         public int Lines { get; } = 8;
         public int Columns { get; } = 8;
 
+        public bool Promotion {get; set;}
+
         private Piece[,] Pieces;
 
         public Board()
@@ -26,11 +28,12 @@ namespace XadrezDeConsole.Domain.Abstraction
 
         public void InsertPiece(Piece piece, Position position)
         {
-            if (IsEmpty(position))
+            if (IsEmpty(position) && this.Promotion == false)
                 throw new GameException($"Position occupied {position}");
 
             this.Pieces[position.Line, position.Column] = piece;
             piece.Position = position;
+            this.Promotion = false;
         }
         
         public Piece RemovePiece(Position position)

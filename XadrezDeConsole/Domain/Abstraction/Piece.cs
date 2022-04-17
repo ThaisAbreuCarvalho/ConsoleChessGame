@@ -8,7 +8,8 @@ namespace XadrezDeConsole.Domain.Abstraction
         public Position Position { get; set; }
         public Color Color { get; protected set; }
         public int Movements { get; protected set; }
-    
+        public abstract string Name { get; set; }
+
         public Piece(Board board, Color color)
         {
             this.Board = board;

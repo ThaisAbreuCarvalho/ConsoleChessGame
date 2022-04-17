@@ -11,6 +11,7 @@ namespace XadrezDeConsole.Domain.Entities
     {
         public Match Match;
         public Position InitialPosition { get; set; }
+        public override string Name { get; set; } = "P";
 
         public Pawn(Board board, Color color, Position initialPosition, Match match) : base(board, color)
         {
@@ -57,7 +58,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return " P ";
+            return $" {this.Name} ";
         }
 
         public void VerifyEnPassant(bool[,] possibleMovements)

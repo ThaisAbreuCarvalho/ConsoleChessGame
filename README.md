@@ -12,6 +12,8 @@
   - King in check control;<br>
   - Check and checkmate logics;<br>
   - Castling logics;<br>
-  - En Passant logics;
+  - En Passant logics; <br>
+  - Pawn promotion;
   
-<h5> obs: Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation</h25>
+<h5> obs: Some of the rules found in http://www.fraserheightschess.com/Documents/BasicChessRules.pdf are still under implementation</h5>
+<h7> obs: Fools mate and Scholar mate are not implemented.</h7>
