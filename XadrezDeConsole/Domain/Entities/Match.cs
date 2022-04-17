@@ -18,6 +18,7 @@ namespace XadrezDeConsole.Domain.Entities
         public Position CastlingPosition { get; set; }
         public Piece EnPassant { get; set; }
         public bool EnPassantAllowed { get; set; }
+        public HashSet<Piece> PossiblePieces { get; private set; }
         public HashSet<Piece> MatchPieces { get; private set; }
         private HashSet<Piece> CapturedPieces;
 
@@ -28,6 +29,7 @@ namespace XadrezDeConsole.Domain.Entities
             this.CurrentPlayer = Color.Yellow;
             this.MatchPieces = new HashSet<Piece>();
             this.CapturedPieces = new HashSet<Piece>();
+            this.PossiblePieces = new HashSet<Piece>();
             this.check = ChessMove.None;
             SetBoard();
         }
@@ -56,6 +58,9 @@ namespace XadrezDeConsole.Domain.Entities
                     case ChessMove.Checkmate:
                         break;
 
+                    case ChessMove.Stalemate:
+                        break;
+
                     default:
                         if (CastlingPosition != null && (CastlingPosition?.Line == destination.Line && CastlingPosition?.Column == destination.Column))
                         {
@@ -69,6 +74,11 @@ namespace XadrezDeConsole.Domain.Entities
                         else if (piece is Pawn && this.EnPassantAllowed)
                         {
                             IsEnPassantMove(piece, destination);
+                        }
+
+                        if (piece is Pawn && (destination.Line == 0 || destination.Line == 7))
+                        {
+                            VerifyPromotion(piece);
                         }
 
                         this.Turn++;
@@ -97,6 +107,8 @@ namespace XadrezDeConsole.Domain.Entities
 
         public void ValidateOrigin(Position position)
         {
+            VerifyStealmate(position);
+
             if (!this.Board.IsValidPosition(position) || this.Board.Piece(position)?.Color != this.CurrentPlayer)
             {
                 throw new GameException($"Position Invalid: {position}");
@@ -128,6 +140,7 @@ namespace XadrezDeConsole.Domain.Entities
         {
             this.Board.InsertPiece(piece, position);
             this.MatchPieces.Add(piece);
+            this.PossiblePieces.Add(piece);
         }
 
         private void SetBoard()
@@ -182,7 +195,7 @@ namespace XadrezDeConsole.Domain.Entities
             return this.CapturedPieces.Where(x => x.Color == Color.Yellow).ToHashSet();
         }
 
-        public ChessMove VerifyCheck(Color color)
+        public ChessMove VerifyCheck(Color color, Piece piece = null)
         {
             var enemyPieces = this.MatchPieces.Where(x => x.Color != color);
             var king = this.MatchPieces.Where(x => x is King && x.Color == color).FirstOrDefault();
@@ -190,10 +203,10 @@ namespace XadrezDeConsole.Domain.Entities
             foreach (var enemy in enemyPieces)
             {
                 var inCheck = enemy.PossibleMovements()[king.Position.Line, king.Position.Column];
+                var kingMovements = king.PossibleMovements();
+
                 if (inCheck)
                 {
-                    var kingMovements = king.PossibleMovements();
-
                     for (int i = 0; i < this.Board.Lines; i++)
                     {
                         for (int j = 0; j < this.Board.Columns; j++)
@@ -248,6 +261,66 @@ namespace XadrezDeConsole.Domain.Entities
 
             this.EnPassant = null;
             this.EnPassantAllowed = false;
+        }
+
+        public void VerifyStealmate(Position position)
+        {
+            var stealmate = true;
+
+            if (this.Board.IsValidPosition(position))
+            {
+                var piece = this.Board.Piece(position);
+
+                if (piece is King)
+                {
+                    var kingMovements = piece.PossibleMovements();
+
+                    for (int i = 0; i < this.Board.Lines; i++)
+                    {
+                        for (int j = 0; j < this.Board.Columns; j++)
+                        {
+                            if (kingMovements[i, j] == true)
+                            {
+                                stealmate = false;
+                                break;
+                            }
+                        }
+
+                        if (stealmate == false)
+                            break;
+                    }
+
+                    if (stealmate)
+                    {
+                        this.check = stealmate == false ? ChessMove.None : ChessMove.Stalemate;
+                        this.Finish();
+                    }
+                }
+            }
+        }
+
+        public void VerifyPromotion(Piece piece)
+        {
+            Console.Clear();
+            Console.WriteLine("Congrats pawn promotion, choose a Piece to recover:");
+            this.Board.Promotion = true;
+            var possiblePieces = this.PossiblePieces.Where(x => x.Color == piece.Color);
+            var pieces = possiblePieces.Select(x => x.Name).Distinct();
+
+            foreach (var capturedPiece in pieces)
+            {
+                Console.ForegroundColor = (ConsoleColor)piece.Color;
+                Console.Write(capturedPiece + " ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write(" ");
+            }
+
+            Console.WriteLine();
+            var description = Console.ReadLine();
+            var recoveredPiece = possiblePieces.FirstOrDefault(x => x.Name.ToLower() == description.ToLower());
+
+            this.MatchPieces.Add(recoveredPiece);
+            this.Board.InsertPiece(recoveredPiece, piece.Position);
         }
     }
 }

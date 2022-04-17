@@ -49,6 +49,11 @@ namespace XadrezDeConsole.Helpers
                     Console.WriteLine($"{EnumExtension.GetEnumDescription(match.check)} {match.CurrentPlayer} wins!");
                     match.Finish();
                     break;
+                
+                case ChessMove.Stalemate:
+                    Console.WriteLine($"{EnumExtension.GetEnumDescription(match.check)}: there is a tie!");
+                    match.Finish();
+                    break;
 
                 default:
                     break;

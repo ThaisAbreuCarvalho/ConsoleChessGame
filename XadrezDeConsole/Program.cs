@@ -32,6 +32,13 @@ namespace XadrezDeConsole
                     match.ValidateOrigin(origin);
                     var possibleMovements = match.Board.Piece(origin).PossibleMovements();
                     Console.Clear();
+
+                    if (match.IsFinished)
+                    {
+                        Screen.PrintBoard(match.Board, match);
+                        continue;
+                    }
+
                     Screen.PrintBoard(match.Board, possibleMovements);
                     Console.WriteLine("To: ");
                     Position destination = Screen.ReadPosition().ToPosition(match.Board);

@@ -11,7 +11,9 @@ namespace XadrezDeConsole.Helpers.Enums
         Check = 1,
         [Description("Checkmate")]
         Checkmate = 2,
+        [Description("Stalemate")]
+        Stalemate = 3,
         [Description("None")]
-        None = 3
+        None = 4
     }
 }

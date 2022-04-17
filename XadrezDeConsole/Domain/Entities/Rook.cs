@@ -8,6 +8,8 @@ namespace XadrezDeConsole.Domain.Entities
 {
     public class Rook : Piece
     {
+        public override string Name { get; set; } = "R";
+
         public Rook(Board board, Color color) : base(board, color)
         {
         }
@@ -89,7 +91,7 @@ namespace XadrezDeConsole.Domain.Entities
 
         public override string ToString()
         {
-            return " R ";
+            return $" {this.Name} ";
         }
     }
 }
